@@ -1,34 +1,46 @@
-import React, { useState, useCallback } from 'react'
+import moment from 'moment'
 import { useDispatch } from 'react-redux'
+import AddIcon from '@material-ui/icons/Add'
+import InputBase from '@material-ui/core/InputBase'
+import React, { useState, useCallback } from 'react'
+import IconButton from "@material-ui/core/IconButton"
 import { addTaskAction } from '../redux/actions/task_action'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 const TaskForm = () => {
     const [task, setTask] = useState('')
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
    
-    const handleChange = useCallback((task_content) => {
+    const wirteTask = useCallback((task_content) => {
         setTask(task_content)
     }, [setTask])
     
-    const handleSubmit = useCallback((e) => {
+    const addTask = useCallback(e => {
         e.preventDefault()
-        dispatch(addTaskAction({
-            id: Math.random(),
-            content: task
-        }))        
-        setTask('')
+        if(task){
+            dispatch(addTaskAction({
+                id: Math.random(),
+                date: moment().format("MMM Do YY"),
+                content: task
+            }))        
+        setTask('')}
     }, [setTask, task, dispatch])
 
     return(
         <div>
-            <form onSubmit={handleSubmit}>
-                <label>Add new task:</label>
-                <input
-                    type="text"
-                    onChange={(e) => handleChange(e.target.value)}
-                    placeholder='Add a task...'
-                    value={task}
-                />
+            <form onSubmit={addTask}>
+                <IconButton onClick={addTask} >
+                    <AddIcon />
+                </IconButton >
+                <FormControlLabel                        
+                    control={
+                        <InputBase
+                            value={task}
+                            onChange={(e) => wirteTask(e.target.value)}
+                            placeholder="New Task..."
+                        />
+                    }        
+                />              
             </form>
         </div>
     )    

@@ -1,19 +1,15 @@
 import React from 'react'
-import TasksList from './components/TasksList'
-import TaskForm from './components/TaskForm'
 import { Provider } from 'react-redux'
 import { store } from './redux/reducers/task_reducer'
+import ListItemCard from './components/ListItemCard'
 
 function App() {
   return (
-    <Provider store={store}>
-      <div>
-        <h1>Your tasks for today:</h1>
-        <TasksList />
-        <TaskForm />
-      </div>
+    <Provider store={store}> 
+      <ListItemCard />
+
     </Provider>
   )
 }
 
-export default App;
+export default App

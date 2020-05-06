@@ -1,31 +1,40 @@
-import React, { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { deleteTaskAction} from '../redux/actions/task_action'
+import React from 'react'
+import Task from './Task'
+import { useSelector } from 'react-redux'
+import ListItem from "@material-ui/core/ListItem"
+import { withStyles } from '@material-ui/core/styles'
+import ListItemText from "@material-ui/core/ListItemText"
 
+const styles = {
+    root: {
+        overflow: "auto",
+        minHeight: 400, 
+        maxHeight: 400
+    }
+}
 
-const TasksList = () => {
+const TasksList = (props) => {
     const tasks = useSelector((state) => state.tasks)
-    const dispatch = useDispatch()
+    const isHideTasks = useSelector((state) => state.isHideTasks)
     
-    const deleteTask = useCallback((id) => () => {
-        dispatch(deleteTaskAction(id))
-    }, [dispatch])
-    
-    const tasksList = (tasks.length) ? (
+    const tasksList = tasks.length ? (
         tasks.map(task => {
-            return (
-                <div key={task.id}>
-                <span>{task.content}</span>
-                <button onClick={deleteTask(task.id)}>x</button>
-                </div>
-            )
-        })) : ( <p>You have no tasks left, yay!</p> )
+            if (!(isHideTasks && task.status)) {                 
+                return (
+                    <div key={task.id}>     
+                        <Task task={task}/>
+                    </div>
+                )}})) : ( 
+                <ListItem divider="true">
+                    <ListItemText primary="You have no tasks left, yay!" />
+                </ListItem>                               
+        )
     
-    return (
-        <div> 
+    return (        
+        <div className={props.classes.root}>
             { tasksList }
-        </div>
+        </div>        
     )
 }
 
-export default TasksList
+export default withStyles(styles)(TasksList)
